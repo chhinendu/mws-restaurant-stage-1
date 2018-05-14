@@ -6,15 +6,14 @@ const assets = [
     'https://use.fontawesome.com/releases/v5.0.8/css/solid.css',
     'https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css',
     '//cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css',
-    '.',
+    '/',
     '/index.html',
     '/restaurant.html',
     '/css/styles.css',
-    '/data/restaurants.json',
     '/js/dbhelper.js',
     '/js/main.js',
     '/js/restaurant_info.js',
-    '/js/service_worker.js',
+    '/js/indexDB.js',
     '/img/1.jpg',
     '/img/2.jpg',
     '/img/3.jpg',
@@ -57,7 +56,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
     e.respondWith(
         caches.open(cacheName).then( cache => {
-            cache.match(e.request).then(response => {
+            return cache.match(e.request).then(response => {
                 return response || fetch(e.request).then( response => {
                     cache.put(e.request, response.clone());
                     return response;

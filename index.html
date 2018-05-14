@@ -2,46 +2,59 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  <link rel="stylesheet" href="css/styles.css">
-  <title>Restaurant Reviews</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Udacity Restaurant">
+    <meta id="theme-color" name="theme-color" content="#d43900">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css"/>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+    <title>Restaurant Reviews</title>
 </head>
 
 <body>
-  <header>
+<header>
     <nav>
-      <h1><a href="/" tabindex="-1">Restaurant Reviews</a></h1>
+        <h1><a href="/" tabindex="-1">Restaurant Reviews</a></h1>
     </nav>
-  </header>
+</header>
 
-  <main id="maincontent">
+<main id="maincontent">
     <section id="map-container">
-      <div id="map" aria-label="Google map" role="application"></div>
+        <div id="map" aria-label="Google map" role="application"></div>
     </section>
     <section>
-      <div class="filter-options" aria-label="Fiter Results">
-        <h2>Filter Results</h2>
-        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Select Neighborhoods">
-          <option value="all">All Neighborhoods</option>
-        </select>
-        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Select Cuisines">
-          <option value="all">All Cuisines</option>
-        </select>
-      </div>
-      <ul id="restaurants-list" role="contentinfo"></ul>
+        <div class="filter-options" aria-label="Fiter Results">
+            <h2>Filter Results</h2>
+            <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Select Neighborhoods">
+                <option value="all">All Neighborhoods</option>
+            </select>
+            <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Select Cuisines">
+                <option value="all">All Cuisines</option>
+            </select>
+        </div>
+        <ul id="restaurants-list" role="contentinfo"></ul>
     </section>
-  </main>
+</main>
 
-  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script>
-
-
-  <footer id="footer">
+<footer id="footer">
     Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
-  </footer>
+</footer>
+
+<script type="application/javascript" charset="utf-8" src="js/indexDB.js"></script>
+<script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+<script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script>
+
+<script>
+    if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/service_worker.js').then((registration) => {
+            console.log('Registration successful, scope is:', registration.scope);
+        }).catch((error) => {
+            console.log('Service worker registration failed, error:', error);
+        });
+    }
+</script>
 
 </body>
 

@@ -5,7 +5,7 @@ const cacheName = 'restaurants-review-v1';
 const assets = [
     'https://use.fontawesome.com/releases/v5.0.8/css/solid.css',
     'https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css',
-    '//cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css',
     '/',
     '/index.html',
     '/restaurant.html',

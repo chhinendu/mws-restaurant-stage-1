@@ -98,7 +98,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     const container = document.getElementById('reviews-container');
-    const title = document.createElement('h2');
+    const title = document.createElement('h3');
     title.innerHTML = 'Reviews';
     container.appendChild(title);
 
@@ -109,7 +109,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
         return;
     }
     const ul = document.getElementById('reviews-list');
-    let tabindex = 8;
+    let tabindex = 0;
     reviews.forEach(review => {
         ul.appendChild(createReviewHTML(review, tabindex));
     });

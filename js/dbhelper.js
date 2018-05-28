@@ -320,10 +320,7 @@ class DBHelper {
     static addRestaurantToFavorites(restaurantId, isFav, callback) {
         const url = DBHelper.DATABASE_URL + '/restaurants/' + restaurantId + '/?is_favorite=' + isFav;
         fetch(url, {method: 'put'})
-            .then(res => {
-                this.saveToReviewDatabase(Array.of(res));
-                callback(null, 1);
-            })
+            .then(res => callback(null, 1))
             .catch(err => callback(err, null));
     }
 

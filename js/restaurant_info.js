@@ -227,7 +227,7 @@ reviewRestaurant = (restaurant = self.restaurant) => {
             name: name,
             rating: rating,
             comments: message,
-        }
+        };
 
         fetch(`${DBHelper.DATABASE_URL}/reviews`, {
             method: 'post',

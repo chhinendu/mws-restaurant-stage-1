@@ -1,4 +1,5 @@
 let restaurant;
+let reviews;
 var map;
 
 /**
@@ -54,6 +55,38 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     const name = document.getElementById('restaurant-name');
     name.innerHTML = restaurant.name;
 
+    const favoriteIcon = document.createElement('span');
+    favoriteIcon.className = 'restaurant-fav';
+
+    const favoriteIconImg = document.createElement('img');
+    if (restaurant.is_favorite === "true") {
+        favoriteIconImg.alt = 'Favorited ' + restaurant.name;
+        favoriteIconImg.setAttribute("src", './img/ico-fav.png');
+        favoriteIconImg.className = 'restaurant-fav-icon fav';
+    }
+    else {
+        favoriteIconImg.setAttribute("src", './img/ico-fav-o.png');
+        favoriteIconImg.className = 'restaurant-fav-icon fav-not';
+    }
+
+    favoriteIconImg.addEventListener('click', () => {
+        const src = favoriteIconImg.src;
+        if (src.includes('img/ico-fav-o.png')) {
+            DBHelper.addRestaurantToFavorites(restaurant.id, true, (err, res) => {
+                favoriteIconImg.src = './img/ico-fav.png';
+            });
+        }
+        else {
+            DBHelper.addRestaurantToFavorites(restaurant.id, false, (err, res) => {
+                favoriteIconImg.src = './img/ico-fav-o.png';
+            });
+        }
+    });
+
+    favoriteIcon.append(favoriteIconImg);
+    name.prepend(favoriteIcon);
+
+
     const address = document.getElementById('restaurant-address');
     address.innerHTML = restaurant.address;
 
@@ -70,8 +103,16 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
         fillRestaurantHoursHTML();
     }
     // fill reviews
-    fillReviewsHTML();
-}
+    DBHelper.fetchReviewsByRestaurant(getParameterByName('id'), (error, reviews) => {
+        self.reviews = reviews;
+        if (!reviews) {
+            console.error(error);
+            return;
+        }
+        fillReviewsHTML();
+    });
+
+};
 
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
@@ -96,7 +137,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews = self.reviews) => {
     const container = document.getElementById('reviews-container');
     const title = document.createElement('h3');
     title.innerHTML = 'Reviews';
@@ -121,13 +162,13 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  */
 createReviewHTML = (review, tabindex) => {
     const li = document.createElement('li');
-    li.setAttribute('tabindex',tabindex);
+    li.setAttribute('tabindex', tabindex);
     const name = document.createElement('p');
     name.innerHTML = review.name;
     li.appendChild(name);
 
     const date = document.createElement('p');
-    date.innerHTML = review.date;
+    date.innerHTML = new Date(review.updatedAt);
     li.appendChild(date);
 
     const rating = document.createElement('p');
@@ -168,4 +209,37 @@ getParameterByName = (name, url) => {
         return '';
     }
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+/**
+ * Save restaurant reviews
+ * */
+
+reviewRestaurant = (restaurant = self.restaurant) => {
+    let id = restaurant.id;
+    let name = document.getElementById("review-name").value;
+    let rating = document.getElementById("review-rating").value;
+    let message = document.getElementById("review-comment").value;
+
+    if (name !== "" && message !== "") {
+        let review = {
+            restaurant_id: id,
+            name: name,
+            rating: rating,
+            comments: message,
+        }
+
+        fetch(`${DBHelper.DATABASE_URL}/reviews`, {
+            method: 'post',
+            body: JSON.stringify(review)
+        })
+            .then(res => res.json())
+            .catch(error => {
+                console.log('Something went wrong submitting your review');
+            });
+
+        window.location.reload();
+    }
+
+    return false;
 }

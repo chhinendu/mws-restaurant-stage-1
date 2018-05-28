@@ -47,9 +47,9 @@
     <section id="reviews-container">
         <h3>Reviews</h3>
         <section id="restaurant-review-form">
-            <form onsubmit="return reviewRestaurant();" id="review-form">
-                <input type="text" placeholder="Enter your name" id="review-name">
-                <select name="review-rating" id="review-rating">
+            <form onsubmit="return reviewRestaurant();" id="review-form" role="form" aria-label="review form">
+                <input type="text" placeholder="Enter your name" id="review-name" aria-label="review name">
+                <select name="review-rating" id="review-rating" aria-label="review rating">
                     <option value="none" disabled selected>Select Rating</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -57,7 +57,7 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                 </select>
-                <textarea name="review-comment" id="review-comment" rows="5" placeholder="Tell us what you think"></textarea>
+                <textarea name="review-comment" id="review-comment" rows="5" placeholder="Tell us what you think" aria-label="review comment"></textarea>
                 <input type="submit">
             </form>
         </section>
@@ -90,16 +90,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"/>
 <!-- Main CSS file -->
 <link rel="stylesheet" href="css/styles.css" type="text/css">
-
-<script async defer>
-    if (navigator.serviceWorker) {
-        navigator.serviceWorker.register('/service_worker.js').then((registration) => {
-            console.log('Registration successful, scope is:', registration.scope);
-        }).catch((error) => {
-            console.log('Service worker registration failed, error:', error);
-        });
-    }
-</script>
 
 </body>
 

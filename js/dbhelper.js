@@ -1,8 +1,20 @@
 /**
  * Common database helper functions.
  */
-class DBHelper {
 
+/**
+ * Register Service worker
+ */
+if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('/service_worker.js').then((registration) => {
+        console.log('Registration successful, scope is:', registration.scope);
+    }).catch((error) => {
+        console.log('Service worker registration failed, error:', error);
+    });
+}
+
+
+class DBHelper {
     /**
      * Database URL.
      * Change this to restaurants.json file location on your server.
@@ -116,19 +128,12 @@ class DBHelper {
      * Fetch all restaurants.
      */
     static fetchRestaurants(callback) {
-        return DBHelper.getStoredRestaurants().then(restaurants => {
-            if (restaurants.length) {
-                return Promise.resolve(restaurants);
-            }
-            else {
-                return DBHelper.addRestaurantsFromAPI();
-            }
-        })
-            .then(restaurants => {
-                callback(null, restaurants);
-            })
+        return DBHelper.addRestaurantsFromAPI()
+            .then(restaurants => callback(null, restaurants))
             .catch(error => {
-                callback(error, null);
+                DBHelper.getStoredRestaurants()
+                    .then(restaurants => callback(null, restaurants))
+                    .catch(error => callback(error, null));
             });
     }
 
@@ -136,19 +141,12 @@ class DBHelper {
      * Fetch all reviews.
      */
     static fetchReviews(callback) {
-        return DBHelper.getStoredReviews().then(reviews => {
-            if (reviews.length) {
-                return Promise.resolve(reviews);
-            }
-            else {
-                return DBHelper.addReviewsFromAPI();
-            }
-        })
-            .then(reviews => {
-                callback(null, reviews);
-            })
+        return DBHelper.addReviewsFromAPI()
+            .then(reviews => callback(null, reviews))
             .catch(error => {
-                callback(error, null);
+                DBHelper.getStoredReviews()
+                    .then(reviews => callback(null, reviews))
+                    .catch(error => callback(error, null));
             });
     }
 

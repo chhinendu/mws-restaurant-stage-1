@@ -57,6 +57,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
     const favoriteIcon = document.createElement('span');
     favoriteIcon.className = 'restaurant-fav';
+    favoriteIcon.setAttribute('role', 'button');
+    favoriteIcon.setAttribute('aria-label', 'Favorite restaurant');
 
     const favoriteIconImg = document.createElement('img');
     if (restaurant.is_favorite === "true") {
@@ -65,6 +67,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
         favoriteIconImg.className = 'restaurant-fav-icon fav';
     }
     else {
+        favoriteIconImg.alt = 'Non Favorite ' + restaurant.name;
         favoriteIconImg.setAttribute("src", './img/ico-fav-o.png');
         favoriteIconImg.className = 'restaurant-fav-icon fav-not';
     }
@@ -73,11 +76,13 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
         const src = favoriteIconImg.src;
         if (src.includes('img/ico-fav-o.png')) {
             DBHelper.addRestaurantToFavorites(restaurant.id, true, (err, res) => {
+                favoriteIconImg.alt = 'Favorited ' + restaurant.name;
                 favoriteIconImg.src = './img/ico-fav.png';
             });
         }
         else {
             DBHelper.addRestaurantToFavorites(restaurant.id, false, (err, res) => {
+                favoriteIconImg.alt = 'Non Favorite ' + restaurant.name;
                 favoriteIconImg.src = './img/ico-fav-o.png';
             });
         }
@@ -168,7 +173,7 @@ createReviewHTML = (review, tabindex) => {
     li.appendChild(name);
 
     const date = document.createElement('p');
-    date.innerHTML = new Date(review.updatedAt);
+    date.innerHTML = review.updatedAt ? new Date(review.updatedAt).toDateString() : new Date().toDateString();
     li.appendChild(date);
 
     const rating = document.createElement('p');
@@ -238,8 +243,13 @@ reviewRestaurant = (restaurant = self.restaurant) => {
                 console.log('Something went wrong submitting your review');
             });
 
-        window.location.reload();
+        const ul = document.getElementById('reviews-list');
+        let tabindex = 0;
+        ul.appendChild(createReviewHTML(review, tabindex));
+        document.getElementById("review-name").value = '';
+        document.getElementById("review-rating").value = 'none';
+        document.getElementById("review-comment").value = '';
     }
 
     return false;
-}
+};

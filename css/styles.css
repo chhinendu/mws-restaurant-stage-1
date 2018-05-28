@@ -25,7 +25,7 @@ ul, li {
 }
 
 a {
-    color: orange;
+    color: #005e8f;
     text-decoration: none;
 }
 
@@ -55,7 +55,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 
 #footer {
     background-color: #444;
-    color: #aaa;
+    color: #eeeeee;
     font-size: 8pt;
     letter-spacing: 1px;
     padding: 25px 0;
@@ -108,7 +108,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 
 /* Add a color to all links inside the list */
 #breadcrumb li a {
-    color: #0275d8;
+    color: #005e8f;
     text-decoration: none;
 }
 
@@ -242,7 +242,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 
 #restaurant-name {
-    color: #f18200;
+    color: #666;
     font-family: Arial, sans-serif;
     font-size: 20pt;
     font-weight: 200;
@@ -295,7 +295,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 
 #reviews-container h3 {
-    color: #f58500;
+    color: #666;
     font-size: 24pt;
     font-weight: 300;
     letter-spacing: -1px;

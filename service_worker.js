@@ -29,7 +29,7 @@ const assets = [
 // cache requests to all of the site’s assets
 self.addEventListener('install', e => {
     e.waitUntil(
-        caches.open(cacheName).then( cache => {
+        caches.open(cacheName).then(cache => {
             return cache.addAll(assets);
         })
     );
@@ -55,10 +55,12 @@ self.addEventListener('activate', e => {
 // use assets from cache if exists or fetch them from the server add to cache and return
 self.addEventListener('fetch', e => {
     e.respondWith(
-        caches.open(cacheName).then( cache => {
+        caches.open(cacheName).then(cache => {
             return cache.match(e.request).then(response => {
-                return response || fetch(e.request).then( response => {
-                    cache.put(e.request, response.clone());
+                return response || fetch(e.request).then(response => {
+                    if (e.request.url.includes('localhost')) {
+                        cache.put(e.request, response.clone());
+                    }
                     return response;
                 });
             });

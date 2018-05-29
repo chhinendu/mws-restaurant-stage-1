@@ -18,9 +18,6 @@
 </header>
 
 <main id="maincontent">
-    <section id="map-container">
-        <div id="map" aria-label="Google map" role="application"></div>
-    </section>
     <section>
         <div class="filter-options" aria-label="Fiter Results">
             <h2>Filter Results</h2>
@@ -33,6 +30,9 @@
         </div>
         <ul id="restaurants-list" role="contentinfo"></ul>
     </section>
+    <section id="map-container">
+        <div id="map" aria-label="Google map" role="application"></div>
+    </section>
 </main>
 
 <footer id="footer">
@@ -42,10 +42,10 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"/>
 <link rel="stylesheet" href="css/styles.css">
+<script type="application/javascript" charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/loadjs/3.5.4/loadjs.min.js"></script>
 <script type="application/javascript" charset="utf-8" src="js/indexDB.js"></script>
 <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
 <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHa6FlTK7lGovXhpiKTRS3YSuQyS-mUxk&libraries=places&callback=initMap"></script>
 
 </body>
 

@@ -1,25 +1,56 @@
 let restaurant;
 let reviews;
 var map;
+let map_latlang;
 
-/**
- * Initialize Google map, called from HTML.
- */
-window.initMap = () => {
+document.addEventListener('DOMContentLoaded', (event) => {
     fetchRestaurantFromURL((error, restaurant) => {
         if (error) { // Got an error!
             console.error(error);
         }
         else {
-            self.map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 16,
-                center: restaurant.latlng,
-                scrollwheel: false
-            });
             fillBreadcrumb();
-            DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
         }
     });
+});
+
+/**
+ * Initialize Google map, called from HTML.
+ */
+
+window.initMap = () => {
+    self.map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 16,
+        center: map_latlang,
+        scrollwheel: false
+    });
+
+
+    DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+}
+
+google_maps_lazyload = (api_key) => {
+    const options = {
+        rootMargin: '400px',
+        threshold: 0
+    };
+
+    const map = document.getElementById('map');
+
+    const observer = new IntersectionObserver(
+        function (entries, observer) {
+            // Detect intersection https://calendar.perfplanet.com/2017/progressive-image-loading-using-intersection-observer-and-sqip/#comment-102838
+            const isIntersecting = typeof entries[0].isIntersecting === 'boolean' ? entries[0].isIntersecting : entries[0].intersectionRatio > 0;
+            if (isIntersecting) {
+                loadjs('https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&key=' + api_key)
+                observer.unobserve(map);
+            }
+        },
+        options
+    );
+
+    observer.observe(map);
+
 }
 
 /**
@@ -38,6 +69,7 @@ fetchRestaurantFromURL = (callback) => {
     else {
         DBHelper.fetchRestaurantById(id, (error, restaurant) => {
             self.restaurant = restaurant;
+            map_latlang = restaurant.latlng;
             if (!restaurant) {
                 console.error(error);
                 return;
@@ -160,7 +192,9 @@ fillReviewsHTML = (reviews = self.reviews) => {
         ul.appendChild(createReviewHTML(review, tabindex));
     });
     container.appendChild(ul);
-}
+
+    google_maps_lazyload('AIzaSyDHa6FlTK7lGovXhpiKTRS3YSuQyS-mUxk');
+};
 
 /**
  * Create review HTML and add it to the webpage.
@@ -240,7 +274,11 @@ reviewRestaurant = (restaurant = self.restaurant) => {
         })
             .then(res => res.json())
             .catch(error => {
-                console.log('Something went wrong submitting your review');
+                DBHelper.openLocalReviewDatabase().then((db) => {
+                    let tx = db.transaction('localReviewDbs', 'readwrite');
+                    let store = tx.objectStore('localReviewDbs');
+                    store.put(review);
+                })
             });
 
         const ul = document.getElementById('reviews-list');

@@ -6,11 +6,14 @@
  * Register Service worker
  */
 if (navigator.serviceWorker) {
-    navigator.serviceWorker.register('/service_worker.js').then((registration) => {
+    navigator.serviceWorker.register('./service_worker.js').then((registration) => {
         console.log('Registration successful, scope is:', registration.scope);
-    }).catch((error) => {
-        console.log('Service worker registration failed, error:', error);
-    });
+    })
+        .then(registration => navigator.serviceWorker.ready)
+        .then(registration => registration.sync.register('syncReviews').then(() => console.log('Sync registered')))
+        .catch((error) => {
+            console.log('Service worker registration failed, error:', error);
+        });
 }
 
 
@@ -51,6 +54,21 @@ class DBHelper {
                 keyPath: 'id'
             });
             store.createIndex('by-id', 'id');
+        });
+    }
+
+    static openLocalReviewDatabase() {
+        // If the browser doesn't support service worker,
+        // we don't care about having a database
+        if (!navigator.serviceWorker) {
+            return Promise.resolve();
+        }
+
+        return indexDB.open('localReviewDb', 1, function (upgradeDb) {
+            let store = upgradeDb.createObjectStore('localReviewDbs', {
+                keyPath: 'restaurant_id'
+            });
+            store.createIndex('by-id', 'restaurant_id');
         });
     }
 

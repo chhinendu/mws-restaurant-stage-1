@@ -10,6 +10,7 @@ var markers = []
 document.addEventListener('DOMContentLoaded', (event) => {
     fetchNeighborhoods();
     fetchCuisines();
+    updateRestaurants();
 });
 
 /**
@@ -25,7 +26,7 @@ fetchNeighborhoods = () => {
             fillNeighborhoodsHTML();
         }
     });
-}
+};
 
 /**
  * Set neighborhoods HTML.
@@ -82,7 +83,32 @@ window.initMap = () => {
         center: loc,
         scrollwheel: false
     });
-    updateRestaurants();
+
+    addMarkersToMap();
+};
+
+google_maps_lazyload = (api_key) => {
+    const options = {
+        rootMargin: '400px',
+        threshold: 0
+    };
+
+    const map = document.getElementById('map');
+
+    const observer = new IntersectionObserver(
+        function (entries, observer) {
+            // Detect intersection https://calendar.perfplanet.com/2017/progressive-image-loading-using-intersection-observer-and-sqip/#comment-102838
+            const isIntersecting = typeof entries[0].isIntersecting === 'boolean' ? entries[0].isIntersecting : entries[0].intersectionRatio > 0;
+            if (isIntersecting) {
+                loadjs('https://maps.googleapis.com/maps/api/js?callback=initMap&libraries=places&key=' + api_key)
+                observer.unobserve(map);
+            }
+        },
+        options
+    );
+
+    observer.observe(map);
+
 }
 
 /**
@@ -132,7 +158,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
     restaurants.forEach(restaurant => {
         ul.append(createRestaurantHTML(restaurant));
     });
-    addMarkersToMap();
+    google_maps_lazyload('AIzaSyDHa6FlTK7lGovXhpiKTRS3YSuQyS-mUxk');
 }
 
 /**

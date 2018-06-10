@@ -14,6 +14,46 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 });
 
+window.addEventListener('load', function() {
+
+    function updateOnlineStatus(event) {
+        DBHelper.openLocalReviewDatabase().then(db => {
+            if (!db) {
+                return;
+            }
+            let tx = db.transaction('localReviewDbs', 'readwrite');
+            let restaurantStore = tx.objectStore('localReviewDbs');
+            return restaurantStore.getAll();
+        }).then(val => {
+            val.forEach(function (review) {
+                const url = `${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${review.restaurant_id}`;
+                fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify(review),
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                })
+                    .then(response => response.json())
+                    .then(function (val) {
+                        DBHelper.openLocalReviewDatabase().then(function (db) {
+                            if (!db) {
+                                return;
+                            }
+                            let tx = db.transaction('localReviewDbs', 'readwrite');
+                            let restaurantStore = tx.objectStore('localReviewDbs');
+                            restaurantStore.delete(review.restaurant_id)
+                        });
+                    }).catch(function (error) {
+                    console.log(error);
+                });
+            });
+        });
+    }
+
+    window.addEventListener('online',  updateOnlineStatus);
+})
+
 /**
  * Initialize Google map, called from HTML.
  */
@@ -269,7 +309,7 @@ reviewRestaurant = (restaurant = self.restaurant) => {
         };
 
         fetch(`${DBHelper.DATABASE_URL}/reviews`, {
-            method: 'post',
+            method: 'POST',
             body: JSON.stringify(review)
         })
             .then(res => res.json())

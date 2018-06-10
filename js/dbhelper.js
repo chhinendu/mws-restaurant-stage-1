@@ -9,8 +9,6 @@ if (navigator.serviceWorker) {
     navigator.serviceWorker.register('./service_worker.js').then((registration) => {
         console.log('Registration successful, scope is:', registration.scope);
     })
-        .then(registration => navigator.serviceWorker.ready)
-        .then(registration => registration.sync.register('syncReviews').then(() => console.log('Sync registered')))
         .catch((error) => {
             console.log('Service worker registration failed, error:', error);
         });
